@@ -6,6 +6,7 @@ import { McModInfoList } from '../../../../forge/mcmodinfolist'
 import { BaseForgeModStructure } from '../forgemod.struct'
 import { MinecraftVersion } from '../../../../../util/MinecraftVersion'
 import { LoggerUtil } from '../../../../../util/LoggerUtil'
+import { parse } from '../../../../../util/gson'
 
 export class ForgeModStructure17 extends BaseForgeModStructure {
 
@@ -104,7 +105,7 @@ export class ForgeModStructure17 extends BaseForgeModStructure {
         if (raw) {
             // Assuming the main mod will be the first entry in this file.
             try {
-                const resolved = JSON.parse(raw.toString()) as (McModInfoList | McModInfo[])
+                const resolved = parse(raw.toString()) as (McModInfoList | McModInfo[])
 
                 if (Object.prototype.hasOwnProperty.call(resolved, 'modListVersion')) {
                     this.forgeModMetadata[name] = (resolved as McModInfoList).modList[0]

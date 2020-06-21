@@ -59,8 +59,8 @@ export abstract class ModuleStructure extends BaseModelStructure<Module> {
             name: await this.getModuleName(file, filePath),
             type: this.type,
             required: {
-                value: false,
-                def: false
+                value: true,
+                def: true
             },
             artifact: {
                 size: stats.size,
@@ -80,7 +80,9 @@ export abstract class ModuleStructure extends BaseModelStructure<Module> {
         const accumulator: Module[] = []
 
         if (await pathExists(this.containerDirectory)) {
-            const files = await readdir(this.containerDirectory)
+            const files = (await readdir(this.containerDirectory))
+                // Use case-insensitive ordering
+                .sort((a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'}))
             for (const file of files) {
                 const filePath = resolve(this.containerDirectory, file)
                 const stats = await lstat(filePath)
